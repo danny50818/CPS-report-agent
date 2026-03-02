@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兒少保護調查評估系統 V4</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #eef2f5;
+            --card-bg: #ffffff;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--bg-color);
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        .section {
+            background: #f9fbfd;
+            border: 1px solid #d5dfe8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .row>div {
+            flex: 1;
+            min-width: 150px;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="datetime-local"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .hint {
+            font-size: 0.85em;
+            color: #7f8c8d;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .preview-area {
+            margin-top: 20px;
+            background: #fefefe;
+            border: 2px dashed #3498db;
+            padding: 20px;
+            white-space: pre-wrap;
+            font-size: 0.95em;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .sdm-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+        .sdm-item input {
+            width: auto;
+            margin-top: 5px;
+        }
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #34495e;
+        }
+        .investigation-block {
+            background: #f4f7fa;
+            border: 1px solid #bdc3c7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .client-card {
+            position: relative;
+            background: #fff;
+            border: 1px solid #c8d6e0;
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+        .client-card-title {
+            font-weight: bold;
+            font-size: 1em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .client-remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+        .add-client-btn {
+            background: #27ae60;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .add-client-btn:hover {
+            background: #219a52;
+        }
+        .sub-section {
+            background: #f0f4f8;
+            border-left: 3px solid var(--accent-color);
+            padding: 10px 14px;
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 10px;
+        }
+        .sub-section-title {
+            font-weight: bold;
+            font-size: 0.92em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .inline-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .inline-check input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .diagnosis-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .diag-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.92em;
+        }
+        .diag-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .school-type-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .school-type-row>div {
+            flex: 1;
+            min-width: 140px;
+        }
+        .roc-date-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .roc-date-row input {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        small.field-label {
+            display: block;
+            font-size: 0.82em;
+            color: #555;
+            margin-bottom: 3px;
+        }
+        textarea.short {
+            height: 60px;
+        }
+        /* ========== 家庭概況樣式 ========== */
+        .family-sub {
+            background: #f6faff;
+            border: 1px solid #c8ddf0;
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .family-sub-title {
+            font-weight: bold;
+            color: #1a6fa8;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+            padding-left: 8px;
+        }
+        .expense-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .expense-row input,
+        .expense-row select {
+            margin-bottom: 0;
+        }
+        .add-small-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+        .add-small-btn:hover {
+            background: #217dbb;
+        }
+        .remove-small-btn {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .income-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .income-row input,
+        .income-row select {
+            margin-bottom: 0;
+        }
+        .subsidy-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .subsidy-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .subsidy-item input[type="text"],
+        .subsidy-item input[type="number"] {
+            flex: 1;
+            min-width: 120px;
+            margin: 0;
+        }
+        .member-check-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #dce3ea;
+            margin-bottom: 8px;
+        }
+        .member-check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.93em;
+        }
+        .member-check-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        /* 其他下拉伴隨欄位 */
+        .other-input {
+            display: none;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>兒少保護調查評估系統 V4</h2>
+        <!-- ========== 案情來源 ========== -->
+        <div class="section">
+            <label class="label">案情來源</label>
+            <div class="row">
+                <div>
+                    <small class="field-label">通報日期</small>
+                    <input type="date" id="report_date">
+                </div>
+                <div>
+                    <small class="field-label">通報單位</small>
+                    <select id="report_unit" onchange="autoToggleOther(this)">
+                        <option value="醫療">醫療</option>
+                        <option value="社政">社政</option>
+                        <option value="警政">警政</option>
+                        <option value="教育">教育</option>
+                        <option value="113專線">113專線</option>
+                        <option value="__other__">其他</option>
+                    </select>
+                    <input type="text" id="report_unit_other" class="other-input" placeholder="請填寫通報單位">
+                </div>
+                <div>
+                    <small class="field-label">受理日期</small>
+                    <input type="date" id="accept_date">
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; padding-top:20px;">
+                    <input type="checkbox" id="accept_same_day" style="width:auto; margin:0;"
+                        onchange="syncAcceptDate()">
+                    <label for="accept_same_day">當日受理</label>
+                </div>
+            </div>
+        </div>
+        <!-- ========== 案主狀況 ========== -->
+        <div class="section">
+            <label class="label">案主狀況</label>
+            <div id="clients-container"></div>
+            <button class="add-client-btn" onclick="addClient()">＋ 新增案主</button>
+        </div>
+        <!-- ========== 案家成員 ========== -->
+        <div class="section">
+            <label class="label">案家成員</label>
+            <div id="family-members-container"></div>
+            <button class="add-client-btn" onclick="addFamilyMember()">＋ 新增家庭成員</button>
+        </div>
+        <!-- ========== 家庭概況 ========== -->
+        <div class="section">
+            <label class="label">家庭概況</label>
+            <!-- (一) 家庭結構 -->
+            <div class="family-sub">
+                <div class="family-sub-title">（一）家庭結構</div>
+                <select id="fam_structure" onchange="autoToggleOther(this)">
+                    <option value="核心家庭">核心家庭</option>
+                    <option value="單親家庭（父）">單親家庭（父）</option>
+                    <option value="單親家庭（母）">單親家庭（母）</option>
+                    <option value="三代家庭">三代家庭</option>
+                    <option value="隔代教養家庭">隔代教養家庭</option>
+                    <option value="繼親家庭">繼親家庭</option>
+                    <option value="寄養家庭">寄養家庭</option>
+                    <option value="收養家庭">收養家庭</option>
+                    <option value="同居家庭">同居家庭</option>
+                    <option value="多元成家">多元成家</option>
+                    <option value="__other__">其他</option>
+                </select>
+                <input type="text" id="fam_structure_other" class="other-input" placeholder="請填寫家庭結構">
+            </div>
+            <!-- (二) 家庭關係 -->
+            <div class="family-sub">
+                <div class="family-sub-title">（二）家庭關係</div>
+                <!-- 1. 婚姻關係 -->
+                <div style="margin-bottom:14px;">
+                    <small class="field-label"><strong>1. 婚姻關係</strong></small>
+                    <div class="row">
+                        <div>
+                            <small class="field-label">婚姻現況</small>
+                            <select id="fam_marriage_status" onchange="autoToggleOther(this)">
+                                <option value="婚姻存續中">婚姻存續中</option>
+                                <option value="離婚">離婚</option>
+                                <option value="喪偶">喪偶</option>
+                                <option value="分居中">分居中</option>
+                                <option value="未婚同居">未婚同居</option>
+                                <option value="再婚">再婚</option>
+                                <option value="__other__">其他</option>
+                            </select>
+                            <input type="text" id="fam_marriage_status_other" class="other-input" placeholder="請填寫婚姻現況">
+                        </div>
+                        <div>
+                            <small class="field-label">常用描述</small>
+                            <select id="fam_marriage_phrase" onchange="appendPhrase('fam_marriage_desc', this)">
+                                <option value="">─ 選擇常用詞彙 ─</option>
+                                <option value="夫妻關係尚稱穩定">夫妻關係尚稱穩定</option>
+                                <option value="夫妻間衝突頻繁">夫妻間衝突頻繁</option>
+                                <option value="夫妻因管教問題意見分歧">夫妻因管教問題意見分歧</option>
+                                <option value="兩造各自陳述不一致">兩造各自陳述不一致</option>
+                                <option value="案父母因家暴問題致婚姻緊張">案父母因家暴問題致婚姻緊張</option>
+                                <option value="目前已達成協議調解中">目前已達成協議調解中</option>
+                                <option value="案父（母）拒絕配合社工訪視">案父（母）拒絕配合社工訪視</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="fam_marriage_desc" class="short" placeholder="婚姻關係質性敘述..."></textarea>
+                </div>
+                <!-- 2. 親子關係 -->
+                <div style="margin-bottom:14px;">
+                    <small class="field-label"><strong>2. 親子關係</strong></small>
+                    <div class="row">
+                        <div>
+                            <small class="field-label">常用描述</small>
+                            <select onchange="appendPhrase('fam_parent_desc', this)">
+                                <option value="">─ 選擇常用詞彙 ─</option>
+                                <option value="親子互動尚稱良好">親子互動尚稱良好</option>
+                                <option value="親子衝突頻繁">親子衝突頻繁</option>
+                                <option value="管教方式偏嚴格">管教方式偏嚴格</option>
+                                <option value="家長以打罵方式管教">家長以打罵方式管教</option>
+                                <option value="兒少對家長感到恐懼">兒少對家長感到恐懼</option>
+                                <option value="家長表達關愛但缺乏親職技巧">家長表達關愛但缺乏親職技巧</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="fam_parent_desc" class="short" placeholder="親子關係質性敘述..."></textarea>
+                </div>
+                <!-- 3. 手足關係 -->
+                <div id="fam_sibling_section" class="hidden" style="margin-bottom:14px;">
+                    <small class="field-label"><strong>3. 手足關係</strong></small>
+                    <div id="fam_sibling_check_list" class="member-check-list"></div>
+                    <textarea id="fam_sibling_desc" class="short" placeholder="手足關係質性敘述..."></textarea>
+                </div>
+                <!-- 4. 其他親屬關係 -->
+                <div style="margin-bottom:14px;">
+                    <small class="field-label"><strong>4. 其他親屬關係</strong></small>
+                    <div id="fam_other_rel_check_list" class="member-check-list"></div>
+                    <textarea id="fam_other_rel_desc" class="short" placeholder="其他親屬關係質性敘述..."></textarea>
+                </div>
+            </div>
+            <!-- (三) 家庭照顧功能 -->
+            <div class="family-sub">
+                <div class="family-sub-title">（三）家庭照顧功能</div>
+                <small class="field-label">主要照顧者（自動勾選，可手動調整）</small>
+                <div id="fam_caregiver_check_list" class="member-check-list"></div>
+                <textarea id="fam_care_desc" class="short" placeholder="家庭照顧功能質性敘述..."></textarea>
+            </div>
+            <!-- (四) 居住環境 -->
+            <div class="family-sub">
+                <div class="family-sub-title">（四）居住環境</div>
+                <div class="row">
+                    <div>
+                        <small class="field-label">房屋產權</small>
+                        <select id="fam_house_own" onchange="autoToggleOther(this)">
+                            <option value="自有">自有</option>
+                            <option value="租賃">租賃</option>
+                            <option value="借住">借住</option>
+                            <option value="公有宿舍">公有宿舍</option>
+                            <option value="__other__">其他</option>
+                        </select>
+                        <input type="text" id="fam_house_own_other" class="other-input" placeholder="請填寫">
+                    </div>
+                    <div>
+                        <small class="field-label">房屋類型</small>
+                        <select id="fam_house_type" onchange="autoToggleOther(this)">
+                            <option value="公寓">公寓</option>
+                            <option value="大樓">大樓</option>
+                            <option value="透天厝">透天厝</option>
+                            <option value="平房">平房</option>
+                            <option value="套房">套房</option>
+                            <option value="__other__">其他</option>
+                        </select>
+                        <input type="text" id="fam_house_type_other" class="other-input" placeholder="請填寫">
+                    </div>
+                    <div>
+                        <small class="field-label">環境狀況</small>
+                        <select id="fam_house_condition" onchange="autoToggleOther(this)">
+                            <option value="整潔有序">整潔有序</option>
+                            <option value="尚可">尚可</option>
+                            <option value="略顯雜亂">略顯雜亂</option>
+                            <option value="髒亂不堪">髒亂不堪</option>
+                            <option value="__other__">其他</option>
+                        </select>
+                        <input type="text" id="fam_house_condition_other" class="other-input" placeholder="請填寫">
+                    </div>
+                </div>
+                <textarea id="fam_house_desc" class="short" placeholder="居住環境質性敘述..."></textarea>
+            </div>
+            <!-- (五) 經濟狀況 -->
+            <div class="family-sub">
+                <div class="family-sub-title">（五）經濟狀況</div>
+                <small class="field-label">收入來源（勾選有收入的成員並填入月薪）</small>
+                <div id="fam_income_check_list" class="member-check-list"></div>
+                <small class="field-label" style="margin-top:10px;">每月開銷</small>
+                <div id="expenses-container"></div>
+                <button class="add-small-btn" onclick="addExpense()">＋ 新增開銷項目</button>
+                <!-- 政府補助 -->
+                <div style="margin-top:14px;">
+                    <div class="inline-check">
+                        <input type="checkbox" id="fam_has_subsidy" onchange="toggleSubsidy()">
+                        <label for="fam_has_subsidy"><strong>有政府補助</strong></label>
+                    </div>
+                    <div id="fam_subsidy_detail" class="hidden">
+                        <div id="subsidy-container"></div>
+                        <button class="add-small-btn" onclick="addSubsidy()">＋ 新增補助項目</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ========== 案發日期時間 ========== -->
+        <div class="section">
+            <label class="label">案發日期時間</label>
+            <div class="row">
+                <div>
+                    <input type="datetime-local" id="event_datetime">
+                </div>
+                <div class="hint">請選擇案發之年、月、日、時。</div>
+            </div>
+        </div>
+        <!-- ========== 行為人 ========== -->
+        <div class="section">
+            <label class="label">行為人</label>
+            <div class="row">
+                <div>
+                    <small class="field-label">從家庭成員中選取</small>
+                    <select id="perpetrator_select" onchange="autoToggleOther(this)">
+                        <option value="">─ 請先新增家庭成員 ─</option>
+                        <option value="__other__">其他</option>
+                    </select>
+                    <input type="text" id="perpetrator_select_other" class="other-input" placeholder="請填入行為人稱謂">
+                </div>
+            </div>
+        </div>
+        <!-- ========== 傷勢部位與狀態 ========== -->
+        <div class="section">
+            <label class="label">傷勢部位與狀態</label>
+            <div class="row">
+                <div>
+                    <small>部位選擇</small>
+                    <select id="injury_part" onchange="autoToggleOther(this)">
+                        <option value="額頭">額頭</option>
+                        <option value="臉頰">臉頰</option>
+                        <option value="眼睛">眼睛</option>
+                        <option value="鼻子">鼻子</option>
+                        <option value="嘴唇">嘴唇</option>
+                        <option value="牙齒">牙齒</option>
+                        <option value="頸部">頸部</option>
+                        <option value="肩部">肩部</option>
+                        <option value="上臂">上臂</option>
+                        <option value="前臂">前臂</option>
+                        <option value="手掌/指">手掌/指</option>
+                        <option value="胸部">胸部</option>
+                        <option value="腹部">腹部</option>
+                        <option value="背部">背部</option>
+                        <option value="腰部">腰部</option>
+                        <option value="臀部">臀部</option>
+                        <option value="大腿">大腿</option>
+                        <option value="小腿">小腿</option>
+                        <option value="足部">足部</option>
+                        <option value="__other__">其他</option>
+                    </select>
+                    <input type="text" id="injury_part_other" class="other-input" placeholder="請填寫部位">
+                </div>
+                <div>
+                    <small>左右側</small>
+                    <select id="injury_side" onchange="autoToggleOther(this)">
+                        <option value="左側">左側</option>
+                        <option value="右側">右側</option>
+                        <option value="雙側">雙側</option>
+                        <option value="">不分側</option>
+                        <option value="__other__">其他</option>
+                    </select>
+                    <input type="text" id="injury_side_other" class="other-input" placeholder="請填寫">
+                </div>
+                <div>
+                    <small>前後向</small>
+                    <select id="injury_pos" onchange="autoToggleOther(this)">
+                        <option value="前側">前側</option>
+                        <option value="後側">後側</option>
+                        <option value="">不分向</option>
+                        <option value="__other__">其他</option>
+                    </select>
+                    <input type="text" id="injury_pos_other" class="other-input" placeholder="請填寫">
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div style="flex:2">
+                    <small>傷勢狀態分類</small>
+                    <select id="injury_status" onchange="autoToggleOther(this)">
+                        <option value="擦傷 (表皮層脫落)">擦傷：皮膚表面受損</option>
+                        <option value="割傷 (整齊切開)">割傷：皮膚遭鋒利物整齊切開</option>
+                        <option value="裂傷 (撕裂引起)">裂傷：參差不齊的傷口</option>
+                        <option value="刺傷 (傷口小但深)">刺傷：傷口小但深</option>
+                        <option value="瘀傷/挫傷 (烏青)">瘀傷/挫傷：皮下組織出血</option>
+                        <option value="扭傷/拉傷">扭傷/拉傷：韌帶或肌肉受損</option>
+                        <option value="骨折/脫臼">骨折/脫臼：骨骼斷裂或關節脫離</option>
+                        <option value="燒燙傷(一級)">燒燙傷：第一級</option>
+                        <option value="燒燙傷(二級)">燒燙傷：第二級</option>
+                        <option value="燒燙傷(三級)">燒燙傷：第三級</option>
+                        <option value="燒燙傷(四級)">燒燙傷：第四級</option>
+                        <option value="__other__">其他</option>
+                    </select>
+                    <input type="text" id="injury_status_other" class="other-input" placeholder="請填寫傷勢狀態">
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <input type="checkbox" id="is_faded" style="width:auto; margin-right:5px;"> 傷勢已淡化
+                </div>
+            </div>
+        </div>
+        <!-- ========== 調查情形 ========== -->
+        <div class="section">
+            <label class="label">調查情形</label>
+            <div class="investigation-block">
+                <small>受訪對象 (1)</small>
+                <select id="inv_target_1">
+                    <option value="案主">案主</option>
+                    <option value="案主(無法陳述由社工觀察)">案主(無法陳述由社工觀察)</option>
+                </select>
+                <textarea id="inv_text_1" rows="3" placeholder="請撰寫重要關鍵字或語句..."></textarea>
+            </div>
+            <div class="investigation-block">
+                <small>受訪對象 (2) ─ 行為人</small>
+                <select id="inv_target_2">
+                    <option value="案父">父</option>
+                    <option value="案母">母</option>
+                    <option value="案繼父">繼父</option>
+                    <option value="案繼母">繼母</option>
+                    <option value="案外祖父">外祖父</option>
+                    <option value="案外祖母">外祖母</option>
+                    <option value="其他">其他 (請於下方自填)</option>
+                </select>
+                <input type="text" id="inv_target_2_custom" placeholder="若選其他，請填寫稱謂" style="margin-top:5px;">
+                <textarea id="inv_text_2" rows="3" placeholder="請撰寫重要關鍵字或語句..."></textarea>
+            </div>
+            <div class="investigation-block">
+                <small>受訪對象 (3)</small>
+                <select id="inv_target_3">
+                    <option value="案母">母</option>
+                    <option value="案父">父</option>
+                    <option value="案繼父">繼父</option>
+                    <option value="案繼母">繼母</option>
+                    <option value="案祖父">祖父</option>
+                    <option value="案祖母">祖母</option>
+                    <option value="其他">其他</option>
+                </select>
+                <textarea id="inv_text_3" rows="3" placeholder="請撰寫重要關鍵字或語句..."></textarea>
+            </div>
+            <div id="extra_investigation" class="hidden">
+                <div class="investigation-block">
+                    <small>擴充受訪對象 (4)</small>
+                    <input type="text" id="inv_target_4_custom" placeholder="輸入稱謂">
+                    <textarea id="inv_text_4" rows="3" placeholder="請撰寫內容..."></textarea>
+                </div>
+            </div>
+            <button class="btn" style="background:#7f8c8d; font-size:0.9em; margin-bottom:15px;"
+                onclick="document.getElementById('extra_investigation').classList.remove('hidden')">+ 增加擴充調查對象</button>
+            <hr>
+            <div class="investigation-block" style="border: 2px solid var(--accent-color);">
+                <label class="label">現場處遇及案家回應</label>
+                <textarea id="worker_service" rows="3" placeholder="請填入現場所做的處遇及提供的服務..."></textarea>
+                <textarea id="family_response" rows="3" placeholder="請描述案家對於處遇或服務的回應..."></textarea>
+            </div>
+        </div>
+        <!-- ========== SDM 安全評估指標 ========== -->
+        <div class="section">
+            <label class="label">SDM 安全評估指標</label>
+            <p class="hint"><strong>1. 無助狀態 (勾選符合項)：</strong></p>
+            <div class="checkbox-group">
+                <label class="sdm-item"><input type="checkbox" name="sdm_h" value="6足歲以下"> 6足歲以下</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_h" value="被診斷或鑑定出有生理或心理病症">
+                    被診斷或鑑定出有生理或心理病症</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_h" value="嚴重的行為及情緒或心理問題"> 嚴重的行為及情緒或心理問題</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_h" value="受限的發展及認知能力(例如：發展遲緩、語言損傷)">
+                    受限的發展及認知能力(例如：發展遲緩、語言損傷)</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_h" value="受限的身體能力(例如：受損的移動能力、身體障礙)">
+                    受限的身體能力(例如：受損的移動能力、身體障礙)</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_h" value="與社區隔離，或和其他成人、親友的接觸有限">
+                    與社區隔離，或和其他成人、親友的接觸有限</label>
+            </div>
+            <p class="hint" style="margin-top:20px;"><strong>2. 危險因素指標：</strong></p>
+            <div class="checkbox-group" id="sdm_r">
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="照顧者對兒少造成非意外的嚴重傷害">
+                    照顧者對兒少造成非意外的嚴重傷害</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="照顧者威脅要傷害兒少或進行報復">
+                    照顧者威脅要傷害兒少或進行報復</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="過度的管教及體罰"> 過度的管教及體罰</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="新生兒受物質濫用影響"> 新生兒受物質濫用影響</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="成人家暴使兒少陷於身體傷害危險中">
+                    成人家暴使兒少陷於身體傷害危險中</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="照顧者對兒少性虐待/懷疑性虐待">
+                    照顧者對兒少性虐待，或有照顧者被懷疑對兒少性虐待</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="未滿足基本需求致嚴重傷害">
+                    照顧者沒有滿足兒少的基本需求，以致造成嚴重的傷害</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="居住條件不佳且有立即威脅">
+                    居住條件不佳，且對於兒少的健康及安全有立即的威脅</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="照顧者行為造成心理創傷">
+                    照顧者的行為很可能造成兒少嚴重的心理創傷</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="照顧者未提供適切保護">
+                    照顧者在兒少遭受他人傷害時，沒有提供適切的保護</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="案家阻礙調查或逃避管道">
+                    案家阻礙調查進行，或是案家有搬離的打算</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="傷害解釋不合理或前後矛盾">
+                    照顧者對傷害無法提出合理解釋，或回答不一致</label>
+                <label class="sdm-item"><input type="checkbox" name="sdm_r" value="其他"> 其他</label>
+            </div>
+        </div>
+        <!-- ========== 綜合評估結論 ========== -->
+        <div class="section">
+            <label class="label">綜合評估結論</label>
+            <div class="row">
+                <div>
+                    <small>安全評估結論</small>
+                    <select id="safety_decision" onchange="toggleSafetyPlan()">
+                        <option value="留置家中安全無虞">評估案主留置家中安全無虞</option>
+                        <option value="有計畫才安全">評估案主留置家中需有計畫才安全</option>
+                        <option value="不安全">評估案主留置家中不安全(安置)</option>
+                    </select>
+                </div>
+                <div id="safety_plan_div" class="hidden">
+                    <small>安置日期（民國年月日）</small>
+                    <input type="text" id="safety_detail" placeholder="如：115年2月13日">
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div>
+                    <small>風險層級</small>
+                    <select id="risk_level">
+                        <option value="低度">低度</option>
+                        <option value="中度">中度</option>
+                        <option value="高度">高度</option>
+                    </select>
+                </div>
+                <div>
+                    <small>後續行動</small>
+                    <select id="case_action">
+                        <option value="開案提供後續處遇">開案提供後續處遇</option>
+                        <option value="不後處">不後處</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div>
+                    <small>強制親職教育(小時)</small>
+                    <input type="number" id="forced_hr" placeholder="0">
+                </div>
+                <div>
+                    <small>親職減壓服務(小時)</small>
+                    <input type="number" id="stress_hr" placeholder="0">
+                </div>
+                <div>
+                    <small>一般親職教育</small>
+                    <select id="gen_edu">
+                        <option value="無">無</option>
+                        <option value="有">有</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button class="btn" onclick="generateReport()">生成正式評估報告段落</button>
+        <div id="report_preview" class="preview-area" style="display:none;"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
