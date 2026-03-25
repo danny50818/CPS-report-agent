@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,15 +12,18 @@
             --bg-color: #eef2f5;
             --card-bg: #ffffff;
         }
+
         * {
             box-sizing: border-box;
         }
+
         body {
             font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
             margin: 0;
             padding: 20px;
             background: var(--bg-color);
         }
+
         .container {
             max-width: 960px;
             margin: 0 auto;
@@ -28,12 +32,14 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 30px;
         }
+
         h2 {
             text-align: center;
             color: var(--primary-color);
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 10px;
         }
+
         .section {
             background: #f9fbfd;
             border: 1px solid #d5dfe8;
@@ -41,6 +47,7 @@
             padding: 20px;
             margin-bottom: 20px;
         }
+
         .label {
             font-weight: bold;
             display: block;
@@ -48,16 +55,19 @@
             font-size: 1.1em;
             color: var(--primary-color);
         }
+
         .row {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
+
         .row>div {
             flex: 1;
             min-width: 150px;
         }
+
         input[type="text"],
         input[type="number"],
         input[type="date"],
@@ -71,17 +81,21 @@
             margin-bottom: 8px;
             font-size: 0.95em;
         }
+
         textarea {
             resize: vertical;
             height: 100px;
         }
+
         .hint {
             font-size: 0.85em;
             color: #7f8c8d;
         }
+
         .hidden {
             display: none !important;
         }
+
         .preview-area {
             margin-top: 20px;
             background: #fefefe;
@@ -92,11 +106,13 @@
             line-height: 1.8;
             color: #2c3e50;
         }
+
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
+
         .sdm-item {
             display: flex;
             align-items: flex-start;
@@ -104,10 +120,12 @@
             font-size: 0.95em;
             cursor: pointer;
         }
+
         .sdm-item input {
             width: auto;
             margin-top: 5px;
         }
+
         .btn {
             background: var(--primary-color);
             color: white;
@@ -119,9 +137,11 @@
             font-size: 1.2em;
             font-weight: bold;
         }
+
         .btn:hover {
             background: #34495e;
         }
+
         .investigation-block {
             background: #f4f7fa;
             border: 1px solid #bdc3c7;
@@ -129,6 +149,7 @@
             border-radius: 4px;
             margin-bottom: 15px;
         }
+
         .client-card {
             position: relative;
             background: #fff;
@@ -137,12 +158,14 @@
             padding: 18px;
             margin-bottom: 14px;
         }
+
         .client-card-title {
             font-weight: bold;
             font-size: 1em;
             color: var(--primary-color);
             margin-bottom: 10px;
         }
+
         .client-remove-btn {
             position: absolute;
             top: 10px;
@@ -155,6 +178,7 @@
             cursor: pointer;
             font-size: 0.85em;
         }
+
         .add-client-btn {
             background: #27ae60;
             color: white;
@@ -167,9 +191,11 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
+
         .add-client-btn:hover {
             background: #219a52;
         }
+
         .sub-section {
             background: #f0f4f8;
             border-left: 3px solid var(--accent-color);
@@ -177,64 +203,77 @@
             border-radius: 0 4px 4px 0;
             margin-bottom: 10px;
         }
+
         .sub-section-title {
             font-weight: bold;
             font-size: 0.92em;
             color: #2c3e50;
             margin-bottom: 8px;
         }
+
         .inline-check {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
         }
+
         .inline-check input[type="checkbox"] {
             width: auto;
             margin: 0;
         }
+
         .diagnosis-list {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
+
         .diag-item {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 0.92em;
         }
+
         .diag-item input[type="checkbox"] {
             width: auto;
             margin: 0;
         }
+
         .school-type-row {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .school-type-row>div {
             flex: 1;
             min-width: 140px;
         }
+
         .roc-date-row {
             display: flex;
             gap: 6px;
             align-items: center;
         }
+
         .roc-date-row input {
             flex: 1;
             margin-bottom: 0;
         }
+
         small.field-label {
             display: block;
             font-size: 0.82em;
             color: #555;
             margin-bottom: 3px;
         }
+
         textarea.short {
             height: 60px;
         }
+
         /* ========== 家庭概況樣式 ========== */
         .family-sub {
             background: #f6faff;
@@ -243,6 +282,7 @@
             padding: 14px;
             margin-bottom: 14px;
         }
+
         .family-sub-title {
             font-weight: bold;
             color: #1a6fa8;
@@ -251,16 +291,19 @@
             border-left: 4px solid #3498db;
             padding-left: 8px;
         }
+
         .expense-row {
             display: flex;
             gap: 8px;
             align-items: center;
             margin-bottom: 6px;
         }
+
         .expense-row input,
         .expense-row select {
             margin-bottom: 0;
         }
+
         .add-small-btn {
             background: #3498db;
             color: #fff;
@@ -270,9 +313,11 @@
             cursor: pointer;
             font-size: 0.85em;
         }
+
         .add-small-btn:hover {
             background: #217dbb;
         }
+
         .remove-small-btn {
             background: #e74c3c;
             color: #fff;
@@ -282,16 +327,19 @@
             cursor: pointer;
             font-size: 0.8em;
         }
+
         .income-row {
             display: flex;
             gap: 8px;
             align-items: center;
             margin-bottom: 6px;
         }
+
         .income-row input,
         .income-row select {
             margin-bottom: 0;
         }
+
         .subsidy-item {
             display: flex;
             gap: 8px;
@@ -299,16 +347,19 @@
             margin-bottom: 6px;
             flex-wrap: wrap;
         }
+
         .subsidy-item input[type="checkbox"] {
             width: auto;
             margin: 0;
         }
+
         .subsidy-item input[type="text"],
         .subsidy-item input[type="number"] {
             flex: 1;
             min-width: 120px;
             margin: 0;
         }
+
         .member-check-list {
             display: flex;
             flex-direction: column;
@@ -319,16 +370,19 @@
             border: 1px solid #dce3ea;
             margin-bottom: 8px;
         }
+
         .member-check-item {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 0.93em;
         }
+
         .member-check-item input[type="checkbox"] {
             width: auto;
             margin: 0;
         }
+
         /* 其他下拉伴隨欄位 */
         .other-input {
             display: none;
@@ -336,6 +390,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>兒少保護調查評估系統 V4</h2>
@@ -345,7 +400,14 @@
             <div class="row">
                 <div>
                     <small class="field-label">通報日期</small>
-                    <input type="date" id="report_date">
+                    <small style="color:#999;font-size:0.76em;">★ 可點選日曆，或直接輸入民國年（如111/9/12），按 Tab 切換</small>
+                    <div class="roc-date-row">
+                        <input type="date" id="report_date" style="flex:1.5;margin-bottom:0;"
+                            onchange="syncRocFromDate('report_date','report_date_roc')">
+                        <span style="color:#888;font-size:0.85em;">或</span>
+                        <input type="text" id="report_date_roc" placeholder="民國 YYY/MM/DD"
+                            style="flex:1;margin-bottom:0;" onblur="syncDateFromRoc('report_date_roc','report_date')">
+                    </div>
                 </div>
                 <div>
                     <small class="field-label">通報單位</small>
@@ -361,13 +423,26 @@
                 </div>
                 <div>
                     <small class="field-label">受理日期</small>
-                    <input type="date" id="accept_date">
+                    <small style="color:#999;font-size:0.76em;">★ 可點選日曆，或直接輸入民國年（如111/9/12），按 Tab 切換</small>
+                    <div class="roc-date-row">
+                        <input type="date" id="accept_date" style="flex:1.5;margin-bottom:0;"
+                            onchange="syncRocFromDate('accept_date','accept_date_roc')">
+                        <span style="color:#888;font-size:0.85em;">或</span>
+                        <input type="text" id="accept_date_roc" placeholder="民國 YYY/MM/DD"
+                            style="flex:1;margin-bottom:0;" onblur="syncDateFromRoc('accept_date_roc','accept_date')">
+                    </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; padding-top:20px;">
                     <input type="checkbox" id="accept_same_day" style="width:auto; margin:0;"
                         onchange="syncAcceptDate()">
                     <label for="accept_same_day">當日受理</label>
                 </div>
+            </div>
+            <!-- 通報史貼文區 -->
+            <div style="margin-top:14px;">
+                <small class="field-label"><strong>通報史貼文區</strong>（請貼上查詢資料，系統將自動擷取通報史段落輸出至二、）</small>
+                <textarea id="history_paste" rows="5"
+                    placeholder="請貼上完整查詢資料內容，系統將自動擷取（查詢資料:）以下至（三、）之前的段落..."></textarea>
             </div>
         </div>
         <!-- ========== 案主狀況 ========== -->
@@ -740,6 +815,16 @@
         <!-- ========== 綜合評估結論 ========== -->
         <div class="section">
             <label class="label">綜合評估結論</label>
+            <!-- 案情簡述 -->
+            <div style="margin-bottom:16px;">
+                <small class="field-label"><strong>案情簡述</strong>（限20字以內，將自動帶入社工評估第二點）</small>
+                <div style="position:relative;">
+                    <input type="text" id="case_summary" maxlength="20" placeholder="請簡述案情，如：案父以皮帶毆打案主頭部"
+                        oninput="updateSummaryCount(this)" style="padding-right:60px;">
+                    <span id="case_summary_count"
+                        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.8em;color:#999;">0/20</span>
+                </div>
+            </div>
             <div class="row">
                 <div>
                     <small>安全評估結論</small>
@@ -765,11 +850,27 @@
                 </div>
                 <div>
                     <small>後續行動</small>
-                    <select id="case_action">
+                    <select id="case_action" onchange="toggleNoActionDetail()">
                         <option value="開案提供後續處遇">開案提供後續處遇</option>
                         <option value="不後處">不後處</option>
+                        <option value="不安全安置">緊急安置</option>
                     </select>
                 </div>
+            </div>
+            <!-- 不後處轉介選項（條件顯示） -->
+            <div id="no_action_detail" class="hidden"
+                style="margin-top:10px; background:#f4f7fa; border:1px solid #bdc3c7; border-radius:4px; padding:12px;">
+                <small class="field-label"><strong>不後處轉介方式</strong></small>
+                <select id="no_action_type" onchange="toggleNoActionOther()">
+                    <option value="學校">學校</option>
+                    <option value="脆弱家庭">脆弱家庭</option>
+                    <option value="親職減壓">親職減壓</option>
+                    <option value="身障個管">身障個管</option>
+                    <option value="成人保護">成人保護</option>
+                    <option value="性侵害保護">性侵害保護</option>
+                    <option value="__other__">其他</option>
+                </select>
+                <input type="text" id="no_action_type_other" class="other-input" placeholder="請填寫轉介單位">
             </div>
             <div class="row" style="margin-top:10px;">
                 <div>
@@ -794,4 +895,5 @@
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>
