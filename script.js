@@ -34,11 +34,47 @@ function translateText(text) {
 }
 // 當日受理同步
 function syncAcceptDate() {
-    if (el('accept_same_day').checked) el('accept_date').value = el('report_date').value;
+    if (el('accept_same_day').checked) {
+        el('accept_date').value = el('report_date').value;
+        // 同步民國年欄
+        syncRocFromDate('accept_date', 'accept_date_roc');
+    }
 }
-// 安全計畫切換
-function toggleSafetyPlan() {
-    el('safety_plan_div').classList.toggle('hidden', el('safety_decision').value === '留置家中安全無虞');
+// 通用：日曆 → 民國年文字欄
+function syncRocFromDate(dateId, rocId) {
+    var d = el(dateId); var t = el(rocId);
+    if (!d || !t || !d.value) return;
+    var dd = new Date(d.value);
+    t.value = (dd.getFullYear() - 1911) + '/' + String(dd.getMonth() + 1).padStart(2, '0') + '/' + String(dd.getDate()).padStart(2, '0');
+}
+// 通用：民國年文字欄 → 日曆
+function syncDateFromRoc(rocId, dateId) {
+    var t = el(rocId); var d = el(dateId);
+    if (!t || !d) return;
+    var roc = t.value.trim();
+    var m = roc.match(/^(\d{2,3})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+    if (!m) return;
+    d.value = (parseInt(m[1]) + 1911) + '-' + m[2].padStart(2, '0') + '-' + m[3].padStart(2, '0');
+}
+// 不後處轉介顯示切換
+function toggleNoActionDetail() {
+    var v = el('case_action').value;
+    el('no_action_detail').classList.toggle('hidden', v !== '不後處');
+}
+function toggleNoActionOther() {
+    var sel = el('no_action_type');
+    if (!sel) return;
+    var inp = el('no_action_type_other');
+    if (!inp) return;
+    inp.style.display = sel.value === '__other__' ? 'block' : 'none';
+}
+// 案情簡述字數更新
+function updateSummaryCount(inp) {
+    var cnt = el('case_summary_count');
+    if (!cnt) return;
+    var len = inp.value.length;
+    cnt.textContent = len + '/20';
+    cnt.style.color = len >= 20 ? '#e74c3c' : '#999';
 }
 // 常用詞彙附加
 function appendPhrase(targetId, selectEl) {
@@ -262,9 +298,25 @@ function syncRocFromPicker(idx) {
 }
 function syncPickerFromRoc(idx) {
     var roc = el('c' + idx + '_bdate_roc').value.trim();
-    var match = roc.match(/^(\d{2,3})\/(\d{1,2})\/(\d{1,2})$/);
+    var match = roc.match(/^(\d{2,3})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
     if (!match) return;
     el('c' + idx + '_bdate_picker').value = (parseInt(match[1]) + 1911) + '-' + match[2].padStart(2, '0') + '-' + match[3].padStart(2, '0');
+}
+// 家庭成員日期同步函式
+function syncRocFromPickerFm(idx) {
+    var picker = el('fm' + idx + '_bdate_picker');
+    if (!picker || !picker.value) return;
+    var d = new Date(picker.value);
+    var rocYear = d.getFullYear() - 1911;
+    el('fm' + idx + '_bdate_roc').value = rocYear + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getDate()).padStart(2, '0');
+    refreshFamilyLists();
+}
+function syncPickerFromRocFm(idx) {
+    var roc = el('fm' + idx + '_bdate_roc').value.trim();
+    var match = roc.match(/^(\d{2,3})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+    if (!match) return;
+    el('fm' + idx + '_bdate_picker').value = (parseInt(match[1]) + 1911) + '-' + match[2].padStart(2, '0') + '-' + match[3].padStart(2, '0');
+    refreshFamilyLists();
 }
 // ============================================================
 // 案家成員相關
@@ -312,11 +364,24 @@ function addFamilyMember() {
     var nameInp = makeInput('fm' + idx + '_name', 'text', '姓名');
     nameInp.oninput = refreshFamilyLists;
     rd3.appendChild(nameInp); row1.appendChild(rd3);
-    // 生日
-    var rd4 = makeDiv(); rd4.appendChild(makeSmall('出生日期', 'field-label'));
-    var bdInp = makeInput('fm' + idx + '_bdate', 'date');
-    bdInp.onchange = refreshFamilyLists;
-    rd4.appendChild(bdInp); row1.appendChild(rd4);
+    // 生日（日曆 + 民國年文字雙輸入）
+    var rd4 = makeDiv();
+    // 小字提示
+    var bdLabel = makeSmall('出生日期', 'field-label');
+    var bdHint = makeSmall('★ 可點選日曆，或直接輸入民國年（如111/9/12），按 Tab 切換');
+    bdHint.style.color = '#999'; bdHint.style.fontSize = '0.76em'; bdHint.style.display = 'block';
+    rd4.appendChild(bdLabel); rd4.appendChild(bdHint);
+    var bdRow = makeDiv('roc-date-row');
+    var bdPicker = makeInput('fm' + idx + '_bdate_picker', 'date');
+    bdPicker.style.flex = '1.5'; bdPicker.style.marginBottom = '0';
+    bdPicker.onchange = function () { syncRocFromPickerFm(idx); };
+    var orSpanFm = document.createElement('span'); orSpanFm.textContent = '或'; orSpanFm.style.color = '#888'; orSpanFm.style.fontSize = '0.85em';
+    var bdRoc = makeInput('fm' + idx + '_bdate_roc', 'text', '民國 YYY/MM/DD');
+    bdRoc.style.flex = '1'; bdRoc.style.marginBottom = '0';
+    bdRoc.onchange = function () { syncPickerFromRocFm(idx); };
+    bdRow.appendChild(bdPicker); bdRow.appendChild(orSpanFm); bdRow.appendChild(bdRoc);
+    rd4.appendChild(bdRow); row1.appendChild(rd4);
+    // 將舊的 fm+idx+_bdate 給就成員報表讀取用（銀行餘代數）
     card.appendChild(row1);
     // 國籍 row
     var row2 = makeDiv('row');
@@ -467,7 +532,25 @@ function generateReport() {
     var acceptDateRoc = toRocDateStr(el('accept_date').value);
     var isSameDay = el('accept_same_day').checked;
     r += '一、案情來源：' + (reportDateRoc || '○○年○○月○○日') + '由' + (reportUnit || '○○') + '通報，本中心於' + (isSameDay ? '當日' : (acceptDateRoc || '○○月○○日')) + '受理通報並下派社工進行調查。\n\n';
-    r += '二、\n\n';
+    // 二、通報史
+    var historyText = '';
+    var pasteEl = el('history_paste');
+    if (pasteEl && pasteEl.value.trim()) {
+        var raw = pasteEl.value;
+        // 擷取（查詢資料:）以下至（三、）之前的段落
+        var startIdx = raw.indexOf('查詢資料:');
+        if (startIdx === -1) startIdx = raw.indexOf('查詢資料：');
+        var endIdx = raw.indexOf('三、');
+        if (startIdx !== -1) {
+            // 跟在「查詢資料:」序列符的每一行開始
+            var afterKey = raw.indexOf('\n', startIdx);
+            var sliceEnd = endIdx !== -1 && endIdx > startIdx ? endIdx : raw.length;
+            historyText = raw.substring(afterKey !== -1 ? afterKey + 1 : startIdx, sliceEnd).trim();
+        } else {
+            historyText = raw.trim();
+        }
+    }
+    r += '二、通報史：' + (historyText || '（未填）') + '\n\n';
     // 三、社工調查結果
     r += '三、社工調查結果\n';
     var eventTime = el('event_datetime').value.replace('T', ' ');
@@ -565,7 +648,10 @@ function getFamilyMemberReport() {
         var roleRaw = el('fm' + idx + '_role').value;
         var displayRole = roleRaw === 'other' ? (el('fm' + idx + '_role_custom').value || '其他') : siblingBases.includes(roleRaw) ? getSiblingTitle(roleRaw) : roleRaw;
         var name = el('fm' + idx + '_name').value;
-        var bdate = el('fm' + idx + '_bdate').value;
+        // 支援新版雙輸入（_bdate_picker）與舊版（_bdate）
+        var bdatePickerEl = el('fm' + idx + '_bdate_picker');
+        var bdateOldEl = el('fm' + idx + '_bdate');
+        var bdate = (bdatePickerEl && bdatePickerEl.value) ? bdatePickerEl.value : (bdateOldEl ? bdateOldEl.value : '');
         var ageStr = '', bdateStr = '';
         if (bdate) {
             var bd = new Date(bdate), today = new Date();
@@ -643,7 +729,13 @@ function getSocialWorkerAssessment(perpetrator) {
     var risk = el('risk_level').value;
     var action = el('case_action').value;
     var isOpen = action === '開案提供後續處遇';
-    var isPlacement = safety === '不安全';
+    var isPlacement = action === '不安全安置' || safety === '不安全';
+    var isNoAction = action === '不後處';
+    // 案主數量代詞
+    var cCards2 = document.querySelectorAll('.client-card[id^="client-card-"]');
+    var clientWord = cCards2.length > 1 ? '案主們' : '案主';
+    // 案情簡述
+    var caseSummary = (el('case_summary') && el('case_summary').value.trim()) ? el('case_summary').value.trim() : '';
     var r1 = '1. 依SDM安全評估表評估，';
     r1 += h.length ? '案主符合' + h.join('、') + '之無助狀態；' : '案主無符合之無助狀態，';
     r1 += r.length ? '案家有符合' + r.join('、') + '之危險因素指標；' : '案家無符合之危險因素指標，';
@@ -654,12 +746,36 @@ function getSocialWorkerAssessment(perpetrator) {
     var workerAct = el('worker_service').value;
     var famResp = el('family_response').value;
     var perp = perpetrator || '行為人';
-    var r2 = '2. ' + perp + '因前開案件事實經過，有管教事實，';
-    r2 += isPlacement ? '違反兒少權法56條' : (isOpen ? '違反兒少權法49條' : '但未違反兒少權法49條規範');
-    r2 += '；';
+    // 第二點固定格式（三情境）
+    var r2 = '2. 本案經調查為' + perp + '對' + clientWord + (caseSummary || '【案情簡述】') + '，';
+    if (isPlacement) {
+        r2 += '為確保' + clientWord + '人身安全，依兒少權法第56條進行保護安置。';
+    } else if (isOpen) {
+        r2 += '管教樣態已違反兒少權法第49條。';
+    } else {
+        r2 += '雖有管教事實，但無違反兒少權法第49條。';
+    }
     if (workerAct) r2 += translateText(workerAct) + '，';
     if (famResp) r2 += translateText(famResp) + '。';
-    r2 += '評估案家' + (isOpen ? '有' : '無') + '兒少保護服務需求，提供' + action + '。';
+    // 案家需求後導語
+    if (isPlacement || isOpen) {
+        r2 += '評估案家有兒少保護服務需求，擬轉介家處單位提供家庭處遇服務。';
+    } else {
+        r2 += '評估案家無兒少保護服務需求。';
+        var noActSel = el('no_action_type');
+        if (noActSel) {
+            var noActVal2 = noActSel.value === '__other__'
+                ? (el('no_action_type_other') ? el('no_action_type_other').value.trim() : '') : noActSel.value;
+            if (noActVal2) {
+                var useTrack = ['學校', '成人保護', '性侵害保護'];
+                if (useTrack.indexOf(noActVal2) !== -1) {
+                    r2 += '擬續由「' + noActVal2 + '」續予追蹤' + clientWord + '受照顧狀況。';
+                } else {
+                    r2 += '轉介「' + noActVal2 + '」續予提供追蹤輔導服務。';
+                }
+            }
+        }
+    }
     var fHr = el('forced_hr').value, sHr = el('stress_hr').value;
     if (fHr > 0 || sHr > 0) {
         r2 += '考量行為人';
